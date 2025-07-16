@@ -219,10 +219,14 @@ with st.container():
 #logo 
         st.markdown("</div>", unsafe_allow_html=True)
 
-st.markdown(
-    "<div style='text-align: center;'>"
-    "<img src='logo.png' width='150'>"
-    "</div>",
-    unsafe_allow_html=True
-)
+col1, col2, col3 = st.columns([3, 1, 3])  
+with col2:
+    st.image("logo.png", width=200)
+
+st.markdown("""
+    <div style="text-align: center; margin-top: 20px; color: #19277f;">
+        <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
+    </div>
+""", unsafe_allow_html=True)
+
 
