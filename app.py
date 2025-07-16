@@ -133,9 +133,9 @@ def color_disponibilidad_carro(valor):
 
 df_carro_restringidas = df_carro[df_carro['RESTRINGIDAS'] == 'Restringida']
 styled_carros = df_carro_restringidas.style.applymap(color_disponibilidad_carro, subset=['RESTRINGIDAS'])
-# Función para obtener el clima actual
+
 def obtener_clima(ciudad):
-    API_KEY = "280c7d237a0b8a5d8572124200f1f167" 
+    API_KEY = os.getenv("OPENWEATHER_API_KEY")
     url = f"http://api.openweathermap.org/data/2.5/weather?q={ciudad}&appid={API_KEY}&units=metric&lang=es"
     try:
         response = requests.get(url).json()
