@@ -4,6 +4,10 @@ import datetime
 import requests
 from streamlit_autorefresh import st_autorefresh
 import re
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Carga las variables del archivo .env
 
 # Auto-refresh para cambiar entre secciones
 count = st_autorefresh(interval=20000, key="auto_refresh")
