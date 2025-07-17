@@ -4,6 +4,7 @@ import datetime
 import requests
 from streamlit_autorefresh import st_autorefresh
 import re
+import time
 
 # Auto-refresh para cambiar entre secciones
 count = st_autorefresh(interval=20000, key="auto_refresh")
@@ -51,6 +52,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+hora_actual = datetime.datetime.now().strftime("%I:%M %p")  
+
+# Mostrar la hora
+st.markdown(f"""
+    <div style="text-align: center; font-size: 24px; color: #19277f; font-weight: bold; margin-top: 5px;">
+        🕒 {hora_actual}
+    </div>
+""", unsafe_allow_html=True)
 #Título 
 st.markdown("<h1 style='text-align: center; color: #19277f;'>Muelles y Frenos Simón Bolívar</h1>", unsafe_allow_html=True)
 
