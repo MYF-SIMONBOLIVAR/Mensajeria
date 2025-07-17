@@ -7,7 +7,7 @@ import re
 import time
 
 # Auto-refresh para cambiar entre secciones
-count = st_autorefresh(interval=20000, key="auto_refresh")
+count = st_autorefresh(interval=60000, key="auto_refresh")
 seccion = count % 2
 
 st.set_page_config(layout="wide")
