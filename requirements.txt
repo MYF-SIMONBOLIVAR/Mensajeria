@@ -96,12 +96,7 @@ pandas
 requests
 streamlit-autorefresh
 pyodbc
-python-dotenv
-openpyxl
-unixodbc
-unixodbc-dev
-freetds-dev
-freetds-bin
-tdsodbc
+
+
 
 
