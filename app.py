@@ -245,14 +245,24 @@ with st.container():
             </div>
         """, unsafe_allow_html=True)
 
-        # Conectar a la base de datos
-        conn_str = (
-    f"DRIVER={{ODBC Driver 17 for SQL Server}};"
-    f"SERVER={server};"
-    f"DATABASE={database};"
-    f"UID={username};"
-    f"PWD={password};"
-)
+       try:
+    conn = pyodbc.connect(
+        f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+        f"SERVER={st.secrets['database']['DB_SERVER']};"
+        f"DATABASE={st.secrets['database']['DB_NAME']};"
+        f"UID={st.secrets['database']['DB_USER']};"
+        f"PWD={st.secrets['database']['DB_PASSWORD']};"
+    )
+    st.success("Conexión exitosa")
+except Exception as e:
+    st.error("No se pudo conectar a la base de datos")
+    conn = None
+
+if conn:
+    df_despachos = pd.read_sql("SELECT * FROM tabla", conn)
+    st.dataframe(df_despachos)
+else:
+    st.warning("No se cargaron datos por falta de conexión")
         query = """
         SELECT 
             [NroCargue],
@@ -336,6 +346,7 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
