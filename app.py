@@ -20,6 +20,7 @@ server = st.secrets["DB_SERVER"]
 database = st.secrets["DB_NAME"]
 username = st.secrets["DB_USER"]
 password = st.secrets["DB_PASSWORD"]
+driver = st.secrets["driver"]
 OPENWEATHER_API_KEY = st.secrets["OPENWEATHER_API_KEY"]
 
 # =====================
@@ -182,7 +183,8 @@ with st.container():
     elif seccion == 2:
         st.markdown("<h2 style='color: #fab70e; text-align: center;'>Despachos 🚚</h2>", unsafe_allow_html=True)
         try:
-            conn = pyodbc.connect(
+           conn_str = f"DRIVER={{{driver}}};SERVER={server};DATABASE={database};UID={username};PWD={password}"
+           conn = pyodbc.connect(conn_str)
                 f"DRIVER={{ODBC Driver 17 for SQL Server}};"
                 f"SERVER={server};"
                 f"DATABASE={database};"
@@ -256,6 +258,7 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
