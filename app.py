@@ -14,10 +14,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Obtener las credenciales desde las variables de entorno
-server = os.getenv('DB_SERVER')
-database = os.getenv('DB_NAME')
-username = os.getenv('DB_USER')
-password = os.getenv('DB_PASSWORD')
+server = st.secrets["database"]["DB_SERVER"]
+database = st.secrets["database"]["DB_NAME"]
+username = st.secrets["database"]["DB_USER"]
+password = st.secrets["database"]["DB_PASSWORD"]
 
 # Auto-refresh para cambiar entre secciones
 count = st_autorefresh(interval=10000, key="auto_refresh")
@@ -246,13 +246,13 @@ with st.container():
         """, unsafe_allow_html=True)
 
         # Conectar a la base de datos
-        conn = pyodbc.connect(
-            f'Driver={{SQL Server}};'
-            f'Server={server};'
-            f'Database={database};'
-            f'UID={username};'
-            f'PWD={password};'
-        )
+        conn_str = (
+    f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+    f"SERVER={server};"
+    f"DATABASE={database};"
+    f"UID={username};"
+    f"PWD={password};"
+)
         query = """
         SELECT 
             [NroCargue],
@@ -336,5 +336,6 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
