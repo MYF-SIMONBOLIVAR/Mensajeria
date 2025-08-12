@@ -245,26 +245,26 @@ with st.container():
             </div>
         """, unsafe_allow_html=True)
 
-  try:
-    conn = pyodbc.connect(
-        f"DRIVER={{ODBC Driver 17 for SQL Server}};"
-        f"SERVER={st.secrets['database']['DB_SERVER']};"
-        f"DATABASE={st.secrets['database']['DB_NAME']};"
-        f"UID={st.secrets['database']['DB_USER']};"
-        f"PWD={st.secrets['database']['DB_PASSWORD']};"
-    )
-    st.success("Conexión exitosa")
-except Exception as e:
-    st.error("No se pudo conectar a la base de datos")
-    st.error(str(e))
-    conn = None
-
-if conn:
-    query = "SELECT * FROM tabla"
-    df_despachos = pd.read_sql(query, conn)
-    st.dataframe(df_despachos)
-else:
-    st.warning("No se cargaron datos por falta de conexión")
+      try:
+            conn = pyodbc.connect(
+                f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+                f"SERVER={st.secrets['database']['DB_SERVER']};"
+                f"DATABASE={st.secrets['database']['DB_NAME']};"
+                f"UID={st.secrets['database']['DB_USER']};"
+                f"PWD={st.secrets['database']['DB_PASSWORD']};"
+            )
+            st.success("Conexión exitosa")
+        except Exception as e:
+                st.error("No se pudo conectar a la base de datos")
+                st.error(str(e))
+                conn = None
+    
+        if conn:
+            query = "SELECT * FROM tabla"
+            df_despachos = pd.read_sql(query, conn)
+            st.dataframe(df_despachos)
+        else:
+        st.warning("No se cargaron datos por falta de conexión")
         query = """
         SELECT 
             [NroCargue],
@@ -348,6 +348,7 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
