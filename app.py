@@ -14,10 +14,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Obtener las credenciales desde las variables de entorno
-server = "192.168.1.8"
-database = "KONTROLAR_MUELLESSB"
-username = "KontrolarEsc"
-password = "K0ntr0l4rS0luc10n3s2023"
+server = os.getenv('DB_SERVER')
+database = os.getenv('DB_NAME')
+username = os.getenv('DB_USER')
+password = os.getenv('DB_PASSWORD')
 # Auto-refresh para cambiar entre secciones
 count = st_autorefresh(interval=10000, key="auto_refresh")
 seccion = count % 4
@@ -335,6 +335,7 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
