@@ -183,12 +183,13 @@ with st.container():
         st.markdown("<h2 style='color: #fab70e; text-align: center;'>Despachos 🚚</h2>", unsafe_allow_html=True)
         try:
             conn = pyodbc.connect(
-                f'Driver={{SQL Server}};'
-                f'Server={server};'
-                f'Database={database};'
-                f'UID={username};'
-                f'PWD={password};'
+                f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+                f"SERVER={server};"
+                f"DATABASE={database};"
+                f"UID={username};"
+                f"PWD={password};"
             )
+
             query = """
             SELECT 
                 [NroCargue],
@@ -255,3 +256,4 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
