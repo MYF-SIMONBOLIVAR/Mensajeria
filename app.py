@@ -219,7 +219,7 @@ with st.container():
         st.markdown("<h2 style='color: #fab70e; text-align: center;'>Ranking de Despachos 🚚</h2>", unsafe_allow_html=True)
         try:
             conn = pyodbc.connect(
-                f'Driver={{SQL Server}};'
+                f"DRIVER={{ODBC Driver 17 for SQL Server}};"
                 f'Server={server};'
                 f'Database={database};'
                 f'UID={username};'
@@ -256,4 +256,5 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
