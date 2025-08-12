@@ -185,7 +185,7 @@ with st.container():
         try:
            conn_str = f"DRIVER={{{driver}}};SERVER={server};DATABASE={database};UID={username};PWD={password}"
            conn = pyodbc.connect(conn_str)
-                f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+                
                 f"SERVER={server};"
                 f"DATABASE={database};"
                 f"UID={username};"
@@ -258,6 +258,7 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
