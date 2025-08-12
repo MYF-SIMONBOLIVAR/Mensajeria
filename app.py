@@ -12,7 +12,7 @@ import pyodbc
 st.set_page_config(layout="wide")
 
 # Auto-refresh cada 10 segundos
-count = st_autorefresh(interval=10000, key="auto_refresh")
+count = st_autorefresh(interval=60000, key="auto_refresh")
 seccion = count % 4
 
 # Obtener credenciales desde secrets
@@ -256,5 +256,6 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
