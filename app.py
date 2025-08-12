@@ -10,13 +10,13 @@ import os
 import pyodbc
 from dotenv import load_dotenv
 
-if os.path.exists(".env"):
-    load_dotenv()
+# Obtener las credenciales desde secrets
+server = st.secrets["DB_SERVER"]
+database = st.secrets["DB_NAME"]
+username = st.secrets["DB_USER"]
+password = st.secrets["DB_PASSWORD"]
 
-server = os.getenv('DB_SERVER')
-database = os.getenv('DB_NAME')
-username = os.getenv('DB_USER')
-password = os.getenv('DB_PASSWORD')
+OPENWEATHER_API_KEY = st.secrets["OPENWEATHER_API_KEY"]
 
 
 # Auto-refresh para cambiar entre secciones
@@ -336,6 +336,7 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
