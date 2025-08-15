@@ -233,94 +233,88 @@ with st.container():
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-#seccion despachos
-    elif seccion == 2:
-        st.markdown("<div class='fade-in'>", unsafe_allow_html=True)
+# Sección de despachos
+if seccion == 2:
+    st.markdown("<div class='fade-in'>", unsafe_allow_html=True)
 
-        st.markdown("""
-            <div style="background-color:#fdf6e3; padding:20px; border-radius:12px; margin-bottom:20px;">
-                <h2 style='color: #fab70e; text-align: center;'>Despachos 🚚</h2>
-                <p style='text-align: center; color: #19277f; font-size: 18px;'>En esta sección podrás ver los despachos programados en el transcurso del dia.</p>
-            </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+        <div style="background-color:#fdf6e3; padding:20px; border-radius:12px; margin-bottom:20px;">
+            <h2 style='color: #fab70e; text-align: center;'>Despachos Programados 🚚</h2>
+            <p style='text-align: center; color: #19277f; font-size: 18px;'>Aquí podrás ver los despachos programados para el día de hoy.</p>
+        </div>
+    """, unsafe_allow_html=True)
 
-        # Conectar a la base de datos
-        conn = pyodbc.connect(
-            f'Driver={{SQL Server}};'
-            f'Server={server};'
-            f'Database={database};'
-            f'UID={username};'
-            f'PWD={password};'
+    # Leer los despachos desde un archivo Excel
+    try:
+        df_despachos = pd.read_excel("Despachos.xlsx")  # Leer desde el archivo Excel
+        df_despachos.columns = df_despachos.columns.str.strip().str.upper()  # Limpiar nombres de columnas
+
+        # Asegúrate de que las columnas estén en el formato correcto
+        df_despachos['FECHAABRE'] = pd.to_datetime(df_despachos['FECHAABRE'])
+        df_despachos['FECHAENTREGA'] = pd.to_datetime(df_despachos['FECHAENTREGA'], errors='coerce')
+
+        # Filtrar los despachos programados para hoy
+        fecha_actual = datetime.datetime.now().date()
+        df_despachos_hoy = df_despachos[df_despachos['FECHAABRE'].dt.date == fecha_actual]
+
+        # Crear una columna con el tiempo transcurrido
+        df_despachos_hoy['TIEMPO_TRANSCURRIDO'] = df_despachos_hoy.apply(
+            lambda row: f"{(row['FECHAENTREGA'] - row['FECHAABRE']).seconds // 3600}h " 
+                        f"{((row['FECHAENTREGA'] - row['FECHAABRE']).seconds // 60) % 60}m" 
+            if pd.notnull(row['FECHAENTREGA']) else 'PENDIENTE', axis=1
         )
-        query = """
-        SELECT 
-            [NroCargue],
-            [UsuarioAbre],
-            [FechaAbre],
-            CASE 
-                WHEN FechaEntrega = '1900-01-01 00:00:00.000' THEN 'PENDIENTE'
-                ELSE FORMAT(FechaEntrega, 'yyyy-MM-dd HH:mm:ss.fff') 
-            END AS FechaEntrega,
-            CONCAT(
-                DATEDIFF(MINUTE, FechaAbre, FechaEntrega) / 60, 'h ',
-                DATEDIFF(MINUTE, FechaAbre, FechaEntrega) % 60, 'm'
-            ) AS Tiempo_Transcurrido
-        FROM [KONTROLAR_MUELLESSB].[dbo].[VTA_Transporte]
-        WHERE CAST(FechaLectura AS DATE) = CAST(GETDATE() AS DATE)
-        ORDER BY FechaLectura DESC;
 
-        """
-
-        df_despachos = pd.read_sql(query, conn)
-
-        if df_despachos.empty:
+        if df_despachos_hoy.empty:
             st.markdown(
                 "<p style='text-align: center; color: #19277f;'>No hay despachos programados para hoy.</p>",
                 unsafe_allow_html=True
             )
         else:
-            st.dataframe(df_despachos, use_container_width=True)
-#seccion de ranking 
+            st.dataframe(df_despachos_hoy[['NROCARGUE', 'USUARIOABRE', 'FECHAABRE', 'FECHAENTREGA', 'TIEMPO_TRANSCURRIDO']], use_container_width=True)
 
-    elif seccion == 3:
-        st.markdown("<div class='fade-in'>", unsafe_allow_html=True)
+    except Exception as e:
+        st.markdown(f"<p style='text-align: center; color: red;'>Error al cargar los datos de despachos: {e}</p>", unsafe_allow_html=True)
 
-        st.markdown("""
-            <div style="background-color:#fdf6e3; padding:20px; border-radius:12px; margin-bottom:20px;">
-                <h2 style='color: #fab70e; text-align: center;'>Ranking de Despachos 🚚</h2>
-                <p style='text-align: center; color: #19277f; font-size: 18px;'>En esta sección podrás ver el ranking de despachos programados en el transurso del día.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        # Conectar a la base de datos
-        conn = pyodbc.connect(
-            f'Driver={{SQL Server}};'
-            f'Server={server};'
-            f'Database={database};'
-            f'UID={username};'
-            f'PWD={password};'
-        )
-        query_ranking = """
-           SELECT 
-            [UsuarioAbre],
-            COUNT([NroCargue]) AS Pedidos_Entregados,
-            CONCAT(
-                DATEDIFF(MINUTE, MIN(FechaAbre), MAX(FechaEntrega)) / 60, 'h ',
-                DATEDIFF(MINUTE, MIN(FechaAbre), MAX(FechaEntrega)) % 60, 'm'
-            ) AS Tiempo_Transcurrido_Promedio
-        FROM [KONTROLAR_MUELLESSB].[dbo].[VTA_Transporte]
-        WHERE CAST(FechaLectura AS DATE) = CAST(GETDATE() AS DATE)
-        GROUP BY [UsuarioAbre]
-        ORDER BY Pedidos_Entregados DESC;
-        """
-        df_ranking = pd.read_sql(query_ranking, conn)
+# Sección de ranking de despachos
+elif seccion == 3:
+    st.markdown("<div class='fade-in'>", unsafe_allow_html=True)
 
-        if df_ranking.empty:
+    st.markdown("""
+        <div style="background-color:#fdf6e3; padding:20px; border-radius:12px; margin-bottom:20px;">
+            <h2 style='color: #fab70e; text-align: center;'>Ranking de Despachos 🚚</h2>
+            <p style='text-align: center; color: #19277f; font-size: 18px;'>En esta sección podrás ver el ranking de despachos programados en el transcurso del día.</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Leer el ranking desde un archivo Excel
+    try:
+        df_ranking = pd.read_excel("Ranking.xlsx")  # Leer desde el archivo Excel
+        df_ranking.columns = df_ranking.columns.str.strip().str.upper()  # Limpiar nombres de columnas
+
+        # Asegúrate de que las columnas estén en el formato correcto
+        df_ranking['FECHAABRE'] = pd.to_datetime(df_ranking['FECHAABRE'])
+        df_ranking['FECHAENTREGA'] = pd.to_datetime(df_ranking['FECHAENTREGA'], errors='coerce')
+
+        # Filtrar el ranking de despachos para hoy
+        fecha_actual = datetime.datetime.now().date()
+        df_ranking_hoy = df_ranking[df_ranking['FECHAABRE'].dt.date == fecha_actual]
+
+        # Agrupar por usuario y contar los despachos entregados
+        df_ranking_hoy = df_ranking_hoy.groupby('USUARIOABRE').agg(
+            PEDIDOS_ENTREGADOS=('NROCARGUE', 'count'),
+            TIEMPO_TRANSCURRIDO_PROMEDIO=('FECHAENTREGA', lambda x: (x.max() - x.min()).seconds // 3600)
+        ).reset_index()
+
+        if df_ranking_hoy.empty:
             st.markdown(
                 "<p style='text-align: center; color: #19277f;'>No hay datos de ranking disponibles para hoy.</p>",
                 unsafe_allow_html=True
             )
         else:
-            st.dataframe(df_ranking)  
+            st.dataframe(df_ranking_hoy.sort_values(by='PEDIDOS_ENTREGADOS', ascending=False), use_container_width=True)
+
+    except Exception as e:
+        st.markdown(f"<p style='text-align: center; color: red;'>Error al cargar los datos de ranking: {e}</p>", unsafe_allow_html=True)
 
 #logo empresa
         st.markdown("</div>", unsafe_allow_html=True)
@@ -335,6 +329,7 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
