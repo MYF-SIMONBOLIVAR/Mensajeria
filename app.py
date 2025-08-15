@@ -19,7 +19,7 @@ database = os.getenv('DB_NAME')
 username = os.getenv('DB_USER')
 password = os.getenv('DB_PASSWORD')
 # Auto-refresh para cambiar entre secciones
-count = st_autorefresh(interval=10000, key="auto_refresh")
+count = st_autorefresh(interval=60000, key="auto_refresh")
 seccion = count % 4
 
 st.set_page_config(layout="wide")
@@ -335,6 +335,7 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
