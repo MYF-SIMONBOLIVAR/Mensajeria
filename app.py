@@ -291,14 +291,6 @@ elif seccion == 3:
         df_ranking = pd.read_excel("Ranking.xlsx")  # Leer desde el archivo Excel
         df_ranking.columns = df_ranking.columns.str.strip().str.upper()  # Limpiar nombres de columnas
 
-        # Asegúrate de que las columnas estén en el formato correcto
-        df_ranking['FECHAABRE'] = pd.to_datetime(df_ranking['FECHAABRE'])
-        df_ranking['FECHAENTREGA'] = pd.to_datetime(df_ranking['FECHAENTREGA'], errors='coerce')
-
-        # Filtrar el ranking de despachos para hoy
-        fecha_actual = datetime.datetime.now().date()
-        df_ranking_hoy = df_ranking[df_ranking['FECHAABRE'].dt.date == fecha_actual]
-
         # Agrupar por usuario y contar los despachos entregados
         df_ranking_hoy = df_ranking_hoy.groupby('USUARIOABRE').agg(
             PEDIDOS_ENTREGADOS=('NROCARGUE', 'count'),
@@ -329,6 +321,7 @@ st.markdown("""
         <p>© 2025 Muelles y Frenos Simón Bolívar. Todos los derechos reservados.</p>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
